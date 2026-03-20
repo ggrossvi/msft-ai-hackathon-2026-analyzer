@@ -20,7 +20,9 @@ class Settings:
     """
     Central configuration object.
     Keeping config in one place makes the project easier to maintain.
+    Make Search/OpenAI env vars optional so app startup only requires Blob connection string.
     """
+
 
     # Azure Blob Storage
     AZURE_STORAGE_CONNECTION_STRING = require_env("AZURE_STORAGE_CONNECTION_STRING")
@@ -29,16 +31,16 @@ class Settings:
     AZURE_BLOB_VIDEOS_CONTAINER = os.getenv("AZURE_BLOB_VIDEOS_CONTAINER", "videos")
     AZURE_BLOB_RAW_CONTAINER = os.getenv("AZURE_BLOB_RAW_CONTAINER", "raw")
 
-    # Azure AI Search
-    AZURE_SEARCH_ENDPOINT = require_env("AZURE_SEARCH_ENDPOINT")
-    AZURE_SEARCH_KEY = require_env("AZURE_SEARCH_KEY")
-    AZURE_SEARCH_INDEX_NAME = require_env("AZURE_SEARCH_INDEX_NAME")
+    # Azure AI Search (optional in Blob-only mode)
+    AZURE_SEARCH_ENDPOINT = os.getenv("AZURE_SEARCH_ENDPOINT")
+    AZURE_SEARCH_KEY = os.getenv("AZURE_SEARCH_KEY")
+    AZURE_SEARCH_INDEX_NAME = os.getenv("AZURE_SEARCH_INDEX_NAME")
 
-    # Azure OpenAI
-    AZURE_OPENAI_ENDPOINT = require_env("AZURE_OPENAI_ENDPOINT")
-    AZURE_OPENAI_KEY = require_env("AZURE_OPENAI_KEY")
+    # Azure OpenAI (optional in Blob-only mode)
+    AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
+    AZURE_OPENAI_KEY = os.getenv("AZURE_OPENAI_KEY")
     AZURE_OPENAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION", "2024-02-01")
-    AZURE_OPENAI_EMBEDDING_DEPLOYMENT = require_env("AZURE_OPENAI_EMBEDDING_DEPLOYMENT")
+    AZURE_OPENAI_EMBEDDING_DEPLOYMENT = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT")
     AZURE_OPENAI_EMBEDDING_DIMENSIONS = int(os.getenv("AZURE_OPENAI_EMBEDDING_DIMENSIONS", "1536"))
 
     # App behavior
