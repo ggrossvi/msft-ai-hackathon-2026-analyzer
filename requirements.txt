@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+azure-storage-blob
+azure-search-documents
+openai
+pypdf
+python-docx
