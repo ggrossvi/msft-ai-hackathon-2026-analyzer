@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, HTTPException, UploadFile
-from app.blob_service import upload_bytes_to_blob
+from app.blob_service import upload_stream_to_blob
 from app.ingest_service import ingest_file_into_search
 from app.models import SearchRequest, SearchResponse, SearchResultItem
 from app.search_index import hybrid_search
@@ -26,17 +26,26 @@ async def upload_file(file: UploadFile = File(...)):
     one upload call stores the file and makes it searchable.
     """
     try:
+        if not file.filename:
+            raise HTTPException(status_code=400, detail="Missing uploaded filename.")
+
+        # Step 1: stream the raw file into Blob Storage.
+        # NOTE: upload_blob consumes the stream, so we rewind before reading bytes for ingestion.
+        if getattr(file.file, "seekable", lambda: False)():
+            file.file.seek(0)
+        blob_info = upload_stream_to_blob(
+            original_filename=file.filename,
+            stream=file.file,
+            content_type=file.content_type,
+        )
+
+        # Step 2: read bytes for parsing/chunking/embedding (needed by your current ingestion pipeline).
+        if getattr(file.file, "seekable", lambda: False)():
+            file.file.seek(0)
         file_bytes = await file.read()
 
         if not file_bytes:
             raise HTTPException(status_code=400, detail="Uploaded file is empty.")
-
-        # Step 1: store the raw file in Blob Storage.
-        blob_info = upload_bytes_to_blob(
-            file_name=file.filename,
-            data=file_bytes,
-            content_type=file.content_type,
-        )
 
         # Step 2: parse the file, chunk it, embed it, and push it into Search.
         ingest_result = ingest_file_into_search(

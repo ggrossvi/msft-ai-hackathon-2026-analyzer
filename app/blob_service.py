@@ -1,4 +1,9 @@
+import os
+import uuid
+from typing import BinaryIO
+
 from azure.storage.blob import BlobServiceClient
+
 from app.config import settings
 
 # One shared BlobServiceClient for the entire app.
@@ -47,16 +52,27 @@ def ensure_container_exists(container_name: str) -> None:
         container_client.create_container()
 
 
-def upload_bytes_to_blob(*, file_name: str, data: bytes, content_type: str | None = None) -> dict:
+def make_blob_name(original_filename: str) -> str:
+    """
+    Create a collision-resistant blob name while preserving the original extension.
+    """
+    safe_basename = os.path.basename(original_filename or "upload") or "upload"
+    return f"{uuid.uuid4()}_{safe_basename}"
+
+
+def upload_bytes_to_blob(
+    *, original_filename: str, data: bytes, content_type: str | None = None
+) -> dict:
     """
     Upload raw bytes into Azure Blob Storage and return metadata about the upload.
     """
-    container_name = choose_container(file_name, content_type)
+    blob_name = make_blob_name(original_filename)
+    container_name = choose_container(blob_name, content_type)
     ensure_container_exists(container_name)
 
     blob_client = blob_service_client.get_blob_client(
         container=container_name,
-        blob=file_name,
+        blob=blob_name,
     )
 
     blob_client.upload_blob(
@@ -67,6 +83,40 @@ def upload_bytes_to_blob(*, file_name: str, data: bytes, content_type: str | Non
 
     return {
         "container": container_name,
-        "blob_name": file_name,
+        "blob_name": blob_name,
+        "blob_url": blob_client.url,
+    }
+
+
+def upload_stream_to_blob(
+    *,
+    original_filename: str,
+    stream: BinaryIO,
+    content_type: str | None = None,
+) -> dict:
+    """
+    Upload a file stream into Azure Blob Storage and return metadata about the upload.
+
+    This avoids loading the entire file into memory at the upload step.
+    """
+    blob_name = make_blob_name(original_filename)
+    container_name = choose_container(blob_name, content_type)
+    ensure_container_exists(container_name)
+
+    blob_client = blob_service_client.get_blob_client(
+        container=container_name,
+        blob=blob_name,
+    )
+
+    # upload_blob consumes the stream, so callers should rewind if they need it later.
+    blob_client.upload_blob(
+        stream,
+        overwrite=True,
+        content_type=content_type,
+    )
+
+    return {
+        "container": container_name,
+        "blob_name": blob_name,
         "blob_url": blob_client.url,
     }
