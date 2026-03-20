@@ -3,6 +3,7 @@ import uuid
 from typing import BinaryIO
 
 from azure.storage.blob import BlobServiceClient
+from azure.core.exceptions import ResourceExistsError
 
 from app.config import settings
 
@@ -93,28 +94,32 @@ def upload_stream_to_blob(
     original_filename: str,
     stream: BinaryIO,
     content_type: str | None = None,
+    allow_duplicates: bool = False,
 ) -> dict:
     """
     Upload a file stream into Azure Blob Storage and return metadata about the upload.
 
     This avoids loading the entire file into memory at the upload step.
+    If allow_duplicates is False, the upload will fail if the blob already exists.
     """
-    blob_name = make_blob_name(original_filename)
+    safe_name = os.path.basename(original_filename or "upload") or "upload"
+    blob_name = make_blob_name(original_filename) if allow_duplicates else safe_name
     container_name = choose_container(blob_name, content_type)
     ensure_container_exists(container_name)
-
     blob_client = blob_service_client.get_blob_client(
         container=container_name,
         blob=blob_name,
     )
-
-    # upload_blob consumes the stream, so callers should rewind if they need it later.
-    blob_client.upload_blob(
-        stream,
-        overwrite=True,
-        content_type=content_type,
-    )
-
+    if not allow_duplicates and blob_client.exists():
+        raise FileExistsError(f"File already exists: {safe_name}")
+    try:
+        blob_client.upload_blob(
+            stream,
+            overwrite=allow_duplicates,  # False -> blocks replacement
+            content_type=content_type,
+        )
+    except ResourceExistsError:
+        raise FileExistsError(f"File already exists: {safe_name}")
     return {
         "container": container_name,
         "blob_name": blob_name,
