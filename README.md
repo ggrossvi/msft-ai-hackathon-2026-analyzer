@@ -1,5 +1,5 @@
-# msft-ai-hackathon-2026-analyzer
-Trust Lens
+# msft-ai-hackathon-2026-analyzer:  Trust Lens
+
 An Azure RAG starter that:
 
 - uploads files into Azure Blob Storage
