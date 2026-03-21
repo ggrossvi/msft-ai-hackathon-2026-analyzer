@@ -1,10 +1,19 @@
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from app.blob_service import upload_stream_to_blob
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="Azure Blob Upload API (Blob-only)",
     description="Upload files to Azure Blob Storage without search/indexing.",
     version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
