@@ -3,6 +3,7 @@
 .env
 .env.local
 .env.*.local
+!.env.example
 
 # Virtual environments
 venv/
@@ -56,8 +57,13 @@ htmlcov/
 # Local development
 .env.dev
 notes.txt
+notes.md
+summary-*.md
 *.log
 
 # OS
 .DS_Store
 Thumbs.db
+
+notes.txt
+.cursor/*
