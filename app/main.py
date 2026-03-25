@@ -6,6 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.blob_service import upload_stream_to_blob
 from app.config import settings
 from app.ingest_service import ingest_file_into_search
+from app.models import SearchRequest, SearchResponse, SearchResultItem
+from app.search_index import hybrid_search
 
 
 app = FastAPI(
@@ -24,10 +26,9 @@ app.add_middleware(
 )
 
 
-@app.get("/health")
-def health_check():
-    """Basic endpoint to verify the API is running."""
-    search_enabled = all(
+def _search_configured() -> bool:
+    """True when env vars for Azure AI Search + embedding calls are all set."""
+    return all(
         [
             settings.AZURE_SEARCH_ENDPOINT,
             settings.AZURE_SEARCH_KEY,
@@ -37,6 +38,12 @@ def health_check():
             settings.AZURE_OPENAI_EMBEDDING_DEPLOYMENT,
         ]
     )
+
+
+@app.get("/health")
+def health_check():
+    """Basic endpoint to verify the API is running."""
+    search_enabled = _search_configured()
     return {
         "status": "ok",
         "search_enabled": search_enabled,
@@ -46,22 +53,48 @@ def health_check():
     #return {"status": "ok"}
 
 
+@app.post("/search", response_model=SearchResponse)
+def search_documents(body: SearchRequest):
+    """
+    Hybrid keyword + vector search over indexed chunks.
+    Requires Search + OpenAI embedding env vars; returns 503 if not configured.
+    """
+    if not _search_configured():
+        raise HTTPException(
+            status_code=503,
+            detail="Search is not configured. Set Azure AI Search and OpenAI embedding env vars.",
+        )
+    q = (body.query or "").strip()
+    if not q:
+        raise HTTPException(status_code=400, detail="query must not be empty.")
+    top_k = body.top_k if body.top_k is not None else settings.TOP_K_RESULTS
+    if top_k < 1 or top_k > 50:
+        raise HTTPException(status_code=400, detail="top_k must be between 1 and 50.")
+
+    raw = hybrid_search(q, top_k=top_k)
+    items: list[SearchResultItem] = []
+    for r in raw:
+        # Azure SDK returns dict-like rows with document fields + @search.score
+        items.append(
+            SearchResultItem(
+                id=str(r.get("id", "")),
+                file_name=str(r.get("file_name", "")),
+                source_url=str(r.get("source_url", "")),
+                content=str(r.get("content", "")),
+                chunk_number=int(r.get("chunk_number", 0)),
+                score=r.get("@search.score"),
+            )
+        )
+    return SearchResponse(query=q, results=items)
+
+
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     try:
         if not file.filename:
             raise HTTPException(status_code=400, detail="Missing uploaded filename.")
 
-        search_enabled = all(
-            [
-                settings.AZURE_SEARCH_ENDPOINT,
-                settings.AZURE_SEARCH_KEY,
-                settings.AZURE_SEARCH_INDEX_NAME,
-                settings.AZURE_OPENAI_ENDPOINT,
-                settings.AZURE_OPENAI_KEY,
-                settings.AZURE_OPENAI_EMBEDDING_DEPLOYMENT,
-            ]
-        )
+        search_enabled = _search_configured()
 
         blob_info = None
         indexing_info = None

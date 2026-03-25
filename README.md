@@ -144,6 +144,8 @@ Example request body:
 }
 ```
 
+To test `/search`, replace the `query` string in the JSON body with a phrase from the file you uploaded.
+
 ## Notes on Google and Microsoft files
 
 - Microsoft files like PDF and DOCX can be uploaded directly.
