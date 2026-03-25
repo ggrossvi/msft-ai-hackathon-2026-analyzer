@@ -60,6 +60,8 @@ notes.txt
 notes.md
 summary-*.md
 *.log
+plan.md
+
 
 # OS
 .DS_Store
@@ -67,3 +69,6 @@ Thumbs.db
 
 notes.txt
 .cursor/*
+
+*.md
+!**/README.md
