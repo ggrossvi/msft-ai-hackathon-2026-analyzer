@@ -26,6 +26,8 @@ downloads/
 eggs/
 .eggs/
 lib/
+!frontend/src/lib/
+!frontend/src/lib/**
 lib64/
 parts/
 sdist/
@@ -63,6 +65,7 @@ summary-*.md
 plan.md
 *.zip
 *.sh
+microsoft.txt
 
 
 # OS
