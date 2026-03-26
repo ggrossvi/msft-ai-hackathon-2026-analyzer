@@ -61,6 +61,8 @@ notes.md
 summary-*.md
 *.log
 plan.md
+*.zip
+*.sh
 
 
 # OS
