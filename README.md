@@ -116,7 +116,7 @@ Open Swagger docs at:
 http://127.0.0.1:8000/docs
 ```
 
-## Endpoints
+## Endpoints  [API](https://trustlens-fybxdsfqakhggqdr.westus2-01.azurewebsites.net/docs)
 
 ### `GET /health`
 Basic health check.
