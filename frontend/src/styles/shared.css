@@ -1,0 +1,110 @@
+/*
+ * Shared layout + form controls for Trust Lens (upload + search features import these
+ * via App.css). Add new global utility classes here as phases need them.
+ */
+
+.trust-lens {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+  text-align: left;
+  font-family: var(--sans);
+}
+
+.trust-lens header p {
+  margin-top: 0.5rem;
+  color: var(--text);
+  line-height: 145%;
+}
+
+.trust-lens section {
+  margin-top: 1.75rem;
+}
+
+.trust-lens h2 {
+  margin-bottom: 0.75rem;
+}
+
+.trust-lens label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.trust-lens input[type="file"],
+.trust-lens input[type="text"],
+.trust-lens select {
+  font: inherit;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.trust-lens input[type="text"] {
+  width: 100%;
+}
+
+.btn {
+  font: inherit;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.feedback {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--code-bg);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.feedback ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.feedback .ok {
+  color: #16a34a;
+}
+
+.feedback .warn {
+  color: #d97706;
+}
+
+.feedback .err {
+  color: #dc2626;
+}
+
+.feedback.error {
+  border-color: rgba(220, 38, 38, 0.35);
+  color: var(--text-h);
+}
+
+.muted {
+  font-size: 0.875rem;
+  color: var(--text);
+  margin-top: 0.5rem;
+}
+
+.feature-off-note {
+  font-size: 0.875rem;
+  color: var(--text);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
