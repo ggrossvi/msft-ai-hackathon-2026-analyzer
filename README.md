@@ -20,7 +20,7 @@ TrustLens uses a dual-layer AI system: Analyzer AI + Supervisor AI (verification
 
 ![TrustLens UI](https://drive.google.com/uc?export=view&id=1aG0EdjtgsoZewyRNIfUhFUrPelQZOCBb)
 
-![YouTube Video]([https://youtu.be/UBquG0yevVU])
+[![Watch demo](https://i.ytimg.com/vi/UBquG0yevVU/hqdefault.jpg)](https://www.youtube.com/watch?v=UBquG0yevVU)
 
   
 
