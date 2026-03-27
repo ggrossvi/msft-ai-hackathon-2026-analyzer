@@ -17,9 +17,10 @@ TrustLens uses a dual-layer AI system: Analyzer AI + Supervisor AI (verification
 - The system assigns a confidence score to each output
 - Responses are always traceable to source documents
 
-[![TrustLens UI](https://drive.google.com/file/d/1aG0EdjtgsoZewyRNIfUhFUrPelQZOCBb/view?usp=sharing)]
 
-[![YouTube Video](https://youtu.be/UBquG0yevVU)]
+![TrustLens UI](https://drive.google.com/uc?export=view&id=1aG0EdjtgsoZewyRNIfUhFUrPelQZOCBb)
+
+[![YouTube Video](https://img.youtube.com/vi/UBquG0yevVU/hqdefault.jpg)](https://youtu.be/UBquG0yevVU)
 
   
 
