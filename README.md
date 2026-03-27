@@ -19,6 +19,8 @@ TrustLens uses a dual-layer AI system: Analyzer AI + Supervisor AI (verification
 
 [![TrustLens UI](https://drive.google.com/file/d/1aG0EdjtgsoZewyRNIfUhFUrPelQZOCBb/view?usp=sharing)]
 
+[![YouTube Video](https://youtu.be/UBquG0yevVU)]
+
   
 
 TrustLens An Azure RAG starter that:
