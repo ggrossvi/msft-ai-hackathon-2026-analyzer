@@ -1,6 +1,25 @@
-# msft-ai-hackathon-2026-analyzer:  Trust Lens
+# msft-ai-hackathon-2026-analyzer:  
 
-An Azure RAG starter that:
+## TrustLens AI
+
+### TrustLens AI is a governed RAG system that delivers source backed, low hallucination answer for compliance critical industries.
+
+## Problem
+
+Existing AI systems generate hallucinated and unverifiable responses, creating risks in compliance environments.
+
+## Innovation
+
+TrustLens uses a dual-layer AI system: Analyzer AI + Supervisor AI (verification)
+
+- Analyzer AI generates insights from retrieved document data
+- Supervisor AI evaluates the response for accuracy and completeness
+- The system assigns a confidence score to each output
+- Responses are always traceable to source documents
+
+  
+
+TrustLens An Azure RAG starter that:
 
 - uploads files into Azure Blob Storage
 - stores docs, images, and videos in separate containers
