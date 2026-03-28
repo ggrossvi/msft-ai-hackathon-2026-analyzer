@@ -4,6 +4,9 @@
 
 ### TrustLens AI is a governed RAG system that delivers source backed, low hallucination answer for compliance critical industries.
 
+[![Watch the video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://youtu.be/jDNcZndPdIQ?si=Wd25U2g5RDJx-lqB)
+
+
 ## Problem
 
 Existing AI systems generate hallucinated and unverifiable responses, creating risks in compliance environments.
