@@ -17,13 +17,6 @@ TrustLens uses a dual-layer AI system: Analyzer AI + Supervisor AI (verification
 - The system assigns a confidence score to each output
 - Responses are always traceable to source documents
 
-
-![TrustLens UI](https://drive.google.com/uc?export=view&id=1aG0EdjtgsoZewyRNIfUhFUrPelQZOCBb)
-![TrustLens Video Demo](https://youtu.be/UBquG0yevVU)
-
-
-Video Demo: https://youtu.be/UBquG0yevVU
-
   
 
 TrustLens An Azure RAG starter that:
